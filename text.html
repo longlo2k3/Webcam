@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    canvas {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      width: 240px;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Demo: Capture Webcam</h1>
+    <video src="" id="video" width="640" height="480" autoplay></video>
+    <canvas width="640" height="480"></canvas>
+
+    <div style="margin-right: 10px;">
+      <button id="btn" style="margin-right: 10px;">Picture</button>
+      <a href="#" download="webcam.png" id="download" hidden>download</a>
+    </div>
+  </main>
+</body>
+<script>
+  const btn = document.getElementById('btn');
+  const video = document.getElementById('video');
+  const download = document.getElementById('download')
+  const canvas = document.querySelector('canvas')
+
+  async function streamWebcam() {
+    const stream = await navigator.mediaDevices.getUserMedia(
+      {
+        video: true
+      }
+    )
+    video.srcObject = stream
+  }
+  streamWebcam()
+
+  btn.addEventListener("click", () => {
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    ctx.scale(1, -1);
+    download.href = canvas.toDataURL('image/png')
+    download.hidden = false
+  })
+</script>
+
+</html>
